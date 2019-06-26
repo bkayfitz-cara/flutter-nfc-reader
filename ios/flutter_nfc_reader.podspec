@@ -17,6 +17,6 @@ A new flutter plugin project.
   s.dependency 'Flutter'
   s.weak_frameworks = 'CoreNFC'
   s.swift_version = '4.0'
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '11.0'
 end
 
