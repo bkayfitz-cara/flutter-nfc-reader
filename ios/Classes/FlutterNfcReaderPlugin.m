@@ -71,6 +71,11 @@
 }
 
 - (void)readerSession:(NFCNDEFReaderSession *)session didInvalidateWithError:(NSError *)error {
+    // Ignore 'Single Tap Read' errors.  its not actually an error.
+    if (error.code == 204) {
+        return;
+    }
+    
     NSLog(@"%@", error.localizedDescription);
     NSDictionary *data = @{kId: @"", kContent: @"", kError: error.localizedDescription, kStatus: @"error"};
     if (_resulter) {
