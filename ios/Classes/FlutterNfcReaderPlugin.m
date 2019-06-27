@@ -9,7 +9,7 @@
 
 @interface FlutterNfcReaderPlugin()<NFCNDEFReaderSessionDelegate>
 @property (nonatomic, strong) NSString *instruction;
-@property (nonatomic, unsafe_unretained) FlutterResult resulter;
+@property (nonatomic, copy) FlutterResult resulter;
 @property (nonatomic, strong) NFCNDEFReaderSession *nfcSession;
 @end
 
@@ -19,16 +19,6 @@
     FlutterNfcReaderPlugin *instance = [[FlutterNfcReaderPlugin alloc] init];
     [registrar addMethodCallDelegate:instance channel:channel];
 }
-
-dispatch_queue_t nfcQueue() {
-    static dispatch_once_t queueCreationGuard;
-    static dispatch_queue_t queue;
-    dispatch_once(&queueCreationGuard, ^{
-        queue = dispatch_queue_create("com.flutter.nfcreader", DISPATCH_QUEUE_CONCURRENT);
-    });
-    return queue;
-}
-
 
 - (void) handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
     if ([call.method isEqualToString:@"NfcRead"]) {
@@ -53,7 +43,7 @@ dispatch_queue_t nfcQueue() {
 
 - (void) activateNFC:(NSString *)instruction {
     _nfcSession = [[NFCNDEFReaderSession alloc] initWithDelegate:self
-                                                           queue:nfcQueue()
+                                                           queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
                                         invalidateAfterFirstRead:YES];
     
     [_nfcSession setAlertMessage:instruction];

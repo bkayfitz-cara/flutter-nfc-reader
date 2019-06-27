@@ -28,10 +28,9 @@ class _MyAppState extends State<MyApp> {
     print('NFC: Scan started');
 
     print('NFC: Scan readed NFC tag');
-    FlutterNfcReader.read.listen((response) {
-      setState(() {
-        _nfcData = response;
-      });
+    final response = await FlutterNfcReader.read;
+    setState(() {
+      _nfcData = response;
     });
   }
 
